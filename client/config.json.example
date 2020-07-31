@@ -1,0 +1,80 @@
+{
+  "log" : {
+    "access": "",
+    "error": "",
+    "loglevel": "info"
+  },
+  "inbound": [{
+    "port": 1080,
+    "listen": "0.0.0.0",
+    "protocol": "socks",
+    "settings": {
+      "auth": "noauth",
+      "udp": false
+    }
+  },
+  {
+    "port": 2080,
+    "listen": "0.0.0.0",
+    "protocol": "http",
+    "settings": {
+      "timeout": 0
+    }
+  }],
+  "outbound": [{
+    "protocol": "freedom",
+    "settings": {},
+    "tag": "direct"
+  },
+  {
+    "protocol": "vmess",
+    "settings": {
+    "vnext": [
+      {
+        "address": "__V2RAY_SERVER__",
+        "port": __V2RAY_PORT__,
+        "users": [
+          {
+            "id": "__V2RAY_ID__",
+            "alterId": 64,
+           "security": "auto"
+          }
+        ]
+      }
+    ]
+    },
+    "tag": "proxy"
+  }],
+  "routing": {
+    "rules": [
+      {
+        "type": "field",
+        "ip": [
+          "0.0.0.0/8",
+          "10.0.0.0/8",
+          "100.64.0.0/10",
+          "127.0.0.0/8",
+          "169.254.0.0/16",
+          "172.16.0.0/12",
+          "192.0.0.0/24",
+          "192.0.2.0/24",
+          "192.168.0.0/16",
+          "198.18.0.0/15",
+          "198.51.100.0/24",
+          "203.0.113.0/24",
+          "::1/128",
+          "fc00::/7",
+          "fe80::/10"
+        ],
+        "outboundTag": "direct"
+      },
+      {
+          "type": "field",
+          "domain": [
+              "regexp:.*"
+          ],
+          "outboundTag": "proxy"
+      }
+    ]
+  }
+}
